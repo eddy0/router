@@ -1,5 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import { Link } from 'react-router-dom'
+
 
 class Dashboard extends React.Component{
     state = {
@@ -24,9 +26,6 @@ class Dashboard extends React.Component{
                         : this.props.unanswered
         return (
             <div>
-                <div>
-                    dashboard
-                </div>
                 <div className='dashboard-toggle'>
                     <button onClick={() => this.togglerAnwsered()}>Answered</button>
                     <button onClick={() => this.togglerUnanwsered()}>unAnswered</button>
@@ -35,7 +34,9 @@ class Dashboard extends React.Component{
                     {
                         content.map((poll) => (
                             <li key={poll.id}>
-                                {poll.question}
+                                <Link to={`polls/${poll.id}`}>
+                                    {poll.question}
+                                </Link>
                             </li>
                         ))
                     }

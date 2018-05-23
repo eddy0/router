@@ -1,7 +1,8 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {getPercentage} from '../utils/utils'
-import {updateAnswer} from "../actions/answer";
+import {updateAnswer} from "../actions/answer"
+import {Redirect} from 'react-router-dom'
 
 class PollDetail extends React.Component {
 
@@ -11,22 +12,26 @@ class PollDetail extends React.Component {
 
     handleUpdateAnswer = (answer) => {
         const {authedUser, poll } = this.props
-        this.setState(() => ({
-            voted: answer
-        }))
-
-        this.props.dispatch(updateAnswer({
-            authedUser,
-            answer,
-            id: poll.id,
-        }))
+        this.setState((prev) => {
+            if (prev.voted !== null && prev.voted !== answer  ) {
+                this.props.dispatch(updateAnswer({
+                    authedUser,
+                    answer,
+                    currentVote: prev.voted,
+                    id: poll.id,
+                }))
+            }
+            return {
+                voted: answer
+            }
+        })
     }
 
     render() {
         if (this.props.poll === null) {
             return (
                 <div>
-                    404 error
+                    <Redirect to='/' />
                 </div>
             )
         } else {
@@ -51,13 +56,15 @@ class PollDetail extends React.Component {
                                 choose = 'chosen'
                             }
                             return (
+
                                 <li key={key} className={`option ${choose}`}
                                     onClick={() => this.handleUpdateAnswer(key[0])} >
-                                    <div className="result">
-                                        <span>{content}</span>
-                                        <span>{getPercentage(count, total)}% ({count})</span>
-                                    </div>
+                                        <div className="result">
+                                            <span>{content}</span>
+                                            <span>{getPercentage(count, total)}% ({count})</span>
+                                        </div>
                                 </li>
+
                             )
 
                         })}
@@ -83,10 +90,11 @@ const mapStateToProps = ({polls, authedUser, users}, {match}) => {
         return vote.includes(authedUser)
     })
 
+
     return {
         poll,
         authedUser,
-        voted: voted[0].slice(0,1),
+        voted: voted.length> 0?voted[0].slice(0,1): null,
         avatarURL: users[poll.author].avatarURL,
     }
 

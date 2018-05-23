@@ -6,10 +6,10 @@ class Leaderboard extends React.Component {
         let users = this.props.users
         return (
             <ul>
-                { Object.keys(users).map((person) => {
+                { Object.keys(users).map((person, i) => {
                     let user = users[person]
                     return (
-                        <li key={user.id} className='user'>
+                        <li key={i} className='user'>
                             <img src={user.avatarURL} alt={user.name} />
                             <div>
                                 <h1>{user.name}</h1>

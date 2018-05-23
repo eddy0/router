@@ -1,11 +1,12 @@
 const UPDATE_ANSWER = 'UPDATE_ANSWER'
 
-const updateAnswer = ({authedUser, id, answer}) => {
+const updateAnswer = ({authedUser, id, answer, currentVote}) => {
     return {
         type: UPDATE_ANSWER,
         authedUser,
         id,
         answer,
+        currentVote,
     }
 }
 

@@ -16,9 +16,18 @@ const addPoll = (state, action) => {
 }
 
 const updateAnswer = (state, action) => {
-    console.log('action', state, action)
+    let {authedUser, answer, currentVote} = action
+    let vote = `${answer}Votes`
+    let current = `${currentVote}Votes`
+    let prevData = state[action.id][current].filter((id) => id !== authedUser)
+    let newData = state[action.id][vote].concat([authedUser])
     return {
         ...state,
+        [action.id]: {
+            ...state[action.id],
+            [current]: prevData,
+            [vote]: newData,
+        }
     }
 }
 
@@ -27,7 +36,6 @@ const polls = (state={}, action) => {
         [RECEIVE_POLLS]: allState,
         [ADD_POLL]: addPoll,
         [UPDATE_ANSWER]: updateAnswer,
-
     }
     let type = action.type
     let value = mapper[type]
